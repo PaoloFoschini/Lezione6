@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Example class using {@link List} and {@link Map}.
@@ -33,8 +34,7 @@ public final class UseListsAndMaps {
          * without using any looping construct (for, while), populate it with
          * the same contents of the list of point 1.
          */
-        LinkedList<Integer> ll = new LinkedList<>();
-        //ll. ??????????
+        LinkedList<Integer> ll = new LinkedList<>(al);
 
         /*
          * 3) Using "set" and "get" and "size" methods, swap the first and last
@@ -54,7 +54,7 @@ public final class UseListsAndMaps {
         for(int elem : al){
             System.out.print(" " + elem);
         }
-        System.out.print("]");
+        System.out.println("]");
         /*
          * 5) Measure the performance of inserting new elements in the head of
          * the collection: measure the time required to add 100.000 elements as
@@ -62,13 +62,71 @@ public final class UseListsAndMaps {
          * using the previous lists. In order to measure times, use as example
          * TestPerformance.java.
          */
+        final int ELEMENTS = 100_000;
         
+        long time = System.nanoTime();
+        for (int i = 1; i <= ELEMENTS; i++) {
+            al.add(0, i);
+        }
+        time = System.nanoTime() - time;
+        final var millis = TimeUnit.NANOSECONDS.toMillis(time);
+        System.out.println(
+                "Adding 100000 elements as first element of the collection in an arraylist took "
+                + time
+                + "ns ("
+                + millis
+                + "ms)"
+        );
+
+        long time2 = System.nanoTime();
+        for (int i = 1; i <= ELEMENTS; i++) {
+            ll.add(0, i);
+        }
+        time2 = System.nanoTime() - time2;
+        final var millis2 = TimeUnit.NANOSECONDS.toMillis(time);
+        System.out.println(
+                "Adding 100000 elements as first element of the collection in a linked list took "
+                + time2
+                + "ns ("
+                + millis2
+                + "ms)"
+        );
+
         /*
          * 6) Measure the performance of reading 1000 times an element whose
          * position is in the middle of the collection for both ArrayList and
          * LinkedList, using the collections of point 5. In order to measure
          * times, use as example TestPerformance.java.
          */
+        final int MILL = 1000;
+        
+        long time3 = System.nanoTime();
+        for (int i = 1; i <= MILL; i++) {
+            al.get((int)al.size() / 2);         //num,5 non è num, quindi va castato a int
+        }
+        time = System.nanoTime() - time;
+        final var millis3 = TimeUnit.NANOSECONDS.toMillis(time);
+        System.out.println(
+                "Reading 1000 times an element whose position is in the middle in an arraylist took "
+                + time3
+                + "ns ("
+                + millis3
+                + "ms)"
+        );
+
+        long time4 = System.nanoTime();
+        for (int i = 1; i <= MILL; i++) {
+            ll.get((int)al.size() / 2);         //num,5 non è num, quindi va castato a int
+        }
+        time = System.nanoTime() - time;
+        final var millis4 = TimeUnit.NANOSECONDS.toMillis(time);
+        System.out.println(
+                "Reading 1000 times an element whose position is in the middle in an arraylist took "
+                + time4
+                + "ns ("
+                + millis4
+                + "ms)"
+        );
         /*
          * 7) Build a new Map that associates to each continent's name its
          * population:
