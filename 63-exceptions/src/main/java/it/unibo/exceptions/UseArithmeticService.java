@@ -33,7 +33,7 @@ public final class UseArithmeticService {
             LOG.println("Correct: a service with 100% failures cannot be created.");
         }
         try {
-            new ServiceBehindUnstableNetwork(0.5);
+            new ServiceBehindUnstableNetwork(0);
             throw new AssertionError("Expected an IllegalArgumentException, but no Exception was thrown");
         } catch (final IllegalArgumentException e) {
             LOG.println("Correct: a service with 50% failures cannot be created.");
@@ -55,9 +55,9 @@ public final class UseArithmeticService {
          * until it succeeds.
          */
         try{
-            //sendData?
-        }catch(){
-
+            server.sendData(message);
+        }catch(IOException e){
+            System.out.println("Errore in invio: " + e.toString());
         }
     }
 
@@ -66,7 +66,12 @@ public final class UseArithmeticService {
          * This method should re-try to retrieve information from the provided server, catching all IOExceptions,
          * until it succeeds.
          */
-        return null;
+        try{
+            server.receiveResponse();
+            return "Nessun errore";
+        }catch(IOException e){
+            return "Errore in ricezione: " + e.toString();
+        }
     }
 
     private static void assertEqualsAsDouble(final String expected, final String actual) {

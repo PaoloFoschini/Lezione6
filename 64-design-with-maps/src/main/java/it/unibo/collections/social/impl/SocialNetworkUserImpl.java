@@ -39,7 +39,6 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      */
     //private final List<U> followedUserList = new ArrayList<>(); 
     private final Map<String, Set<U>> followedUsersInGroup = new HashMap<>();
-    private final Set<U> set = new Set<U>();
 
     /*
      * [CONSTRUCTORS]
@@ -81,10 +80,12 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      *
      * Implements the methods below
      */
+    final Set<U> set = new HashSet<>();
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
         set = this.followedUsersInGroup.get(circle);
         if(set == null){
+            //new group
             return true;
         }else{
             return false;
@@ -106,8 +107,10 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
         }
     }
 
+    /* Gets the list of every person followed by this user disregarding the group. 
+    return the list of people followed by this user among all her groups */
     @Override
     public List<U> getFollowedUsers() {
-        return this.followedUsersInGroup.values();
+        return;
     }
 }
