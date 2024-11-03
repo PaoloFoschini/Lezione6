@@ -154,8 +154,10 @@ public final class UseListsAndMaps {
         /*
          * 8) Compute the population of the world
          */
-        for(int elem:){
-
+        long sum = 0;
+        for(Long elem : map.values()){
+            sum = sum + elem;
         }
+        System.out.println("The population of the world is: " + sum);
     }
 }

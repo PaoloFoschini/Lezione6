@@ -3,6 +3,7 @@ package it.unibo.exceptions;
 import it.unibo.exceptions.fakenetwork.api.NetworkComponent;
 import it.unibo.exceptions.fakenetwork.impl.ServiceBehindUnstableNetwork;
 
+import java.io.IOException;
 import java.io.PrintStream;
 
 import static it.unibo.exceptions.arithmetic.ArithmeticService.DIVIDED;
@@ -31,6 +32,12 @@ public final class UseArithmeticService {
         } catch (final IllegalArgumentException e) {
             LOG.println("Correct: a service with 100% failures cannot be created.");
         }
+        try {
+            new ServiceBehindUnstableNetwork(0.5);
+            throw new AssertionError("Expected an IllegalArgumentException, but no Exception was thrown");
+        } catch (final IllegalArgumentException e) {
+            LOG.println("Correct: a service with 50% failures cannot be created.");
+        }
         final NetworkComponent server = new ServiceBehindUnstableNetwork();
         assertComputeResult(server, "1", "1");
         assertComputeResult(server, "2", "1", PLUS, "1");
@@ -47,6 +54,11 @@ public final class UseArithmeticService {
          * This method should re-try to send message to the provided server, catching all IOExceptions,
          * until it succeeds.
          */
+        try{
+            //sendData?
+        }catch(){
+
+        }
     }
 
     private static String retryReceiveOnNetworkError(final NetworkComponent server) {
