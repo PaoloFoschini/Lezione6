@@ -56,7 +56,12 @@ public final class ArithmeticService {
      */
     public String process() {
         if (commandQueue.isEmpty()) {
-            System.out.println("No commands sent, no result available");
+            try{
+                throw new IllegalStateException("No commands sent, no result available");
+            }finally{
+                commandQueue.clear();
+            }
+            //System.out.println("No commands sent, no result available");
         }
         while (commandQueue.size() != 1) {
             final var nextMultiplication = commandQueue.indexOf(TIMES);
@@ -74,18 +79,33 @@ public final class ArithmeticService {
                     : max(nextSum, nextMinus);
                 if (nextOp != -1) {
                     if (commandQueue.size() < 3) {
-                        System.out.println("Inconsistent operation: " + commandQueue);
+                        try{
+                            throw new IllegalStateException("Inconsistent operation: " + commandQueue);
+                        }finally{
+                            commandQueue.clear();
+                        }
+                        //System.out.println("Inconsistent operation: " + commandQueue);
                     }
                     computeAt(nextOp);
                 } else if (commandQueue.size() > 1) {
-                    System.out.println("Inconsistent state: " + commandQueue);
+                    try{
+                        throw new IllegalStateException("Inconsistent state: " + commandQueue);
+                    }finally{
+                        commandQueue.clear();
+                    }
+                    //System.out.println("Inconsistent state: " + commandQueue);
                 }
             }
         }
         final var finalResult = commandQueue.get(0);
         final var possibleException = nullIfNumberOrException(finalResult);
         if (possibleException != null) {
-            System.out.println("Invalid result of operation: " + finalResult);
+            try{
+                throw new IllegalStateException("Invalid result of operation: " + finalResult);
+            }finally{
+                commandQueue.clear();
+            }
+            //System.out.println("Invalid result of operation: " + finalResult);
         }
         return finalResult;
         /*
@@ -96,20 +116,26 @@ public final class ArithmeticService {
 
     private void computeAt(final int operatorIndex) {
         if (operatorIndex == 0) {
-            System.out.println("Illegal start of operation: " + commandQueue);
+            throw new IllegalStateException("Illegal start of operation: " + commandQueue);
+            //System.out.println("Illegal start of operation: " + commandQueue);
         }
         if (commandQueue.size() < 3) {
-            System.out.println("Not enough operands: " + commandQueue);
+            throw new IllegalStateException("Not enough operands: " + commandQueue);
+            //System.out.println("Not enough operands: " + commandQueue);
         }
         if (commandQueue.size() < operatorIndex + 1) {
-            System.out.println("Missing right operand: " + commandQueue);
+            throw new IllegalStateException("Missing right operand: " + commandQueue);
+            //System.out.println("Missing right operand: " + commandQueue);
         }
         final var rightOperand = commandQueue.remove(operatorIndex + 1);
         final var leftOperand = commandQueue.remove(operatorIndex - 1);
         if (KEYWORDS.contains(rightOperand) || KEYWORDS.contains(leftOperand)) {
-            System.out.println(
+            throw new IllegalStateException(
                 "Expected a number, but got " + leftOperand + " and " + rightOperand + " in " + commandQueue
-            );
+                );
+            /*System.out.println(
+                "Expected a number, but got " + leftOperand + " and " + rightOperand + " in " + commandQueue
+            );*/
         }
         final var right = parseDouble(rightOperand);
         final var left = parseDouble(leftOperand);
@@ -120,8 +146,9 @@ public final class ArithmeticService {
             case TIMES -> left * right;
             case DIVIDED -> left / right;
             default ->  {
-                System.out.println("Unknown operand " + operand);
-                yield Double.NaN;
+                throw new IllegalStateException("Unknown operand " + operand);
+                /*System.out.println("Unknown operand " + operand);
+                yield Double.NaN;*/
             }
         };
         commandQueue.set(operatorIndex - 1, Double.toString(result));
