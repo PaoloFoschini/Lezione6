@@ -80,20 +80,24 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      *
      * Implements the methods below
      */
-    final Set<U> set = new HashSet<>();
+
+     /* Adds a friend to the list of this user's current friends. */
+
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
-        set = this.followedUsersInGroup.get(circle);
-        if(set == null){
-            //new group
+        if(this.followedUsersInGroup.get(circle) == null){
+            Set<U> s = new HashSet<>();
+            s.add(user);
+            this.followedUsersInGroup.put(circle, s);
             return true;
         }else{
+            this.followedUsersInGroup.get(circle).add(user);
             return false;
         }
     }
 
     /**
-     *
+     * Gets the list of followed people belonging to a given group.
      * [NOTE] If no group with groupName exists yet, this implementation must
      * return an empty Collection.
      */
@@ -109,8 +113,10 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
 
     /* Gets the list of every person followed by this user disregarding the group. 
     return the list of people followed by this user among all her groups */
+    final List<U> peopleFollowed = new ArrayList<>();
+
     @Override
     public List<U> getFollowedUsers() {
-        return;
+        return peopleFollowed;
     }
 }
